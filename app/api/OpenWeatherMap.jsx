@@ -17,7 +17,7 @@ module.exports = {
             }
         }, function(res){
             // Error
-            throw new Error('Not Found.');
+            throw new Error(res.message);
         });
     }
 }

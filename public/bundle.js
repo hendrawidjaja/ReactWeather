@@ -26578,6 +26578,7 @@
 	var WeatherForm = __webpack_require__(249);
 	var WeatherMessage = __webpack_require__(250);
 	var OpenWeatherMap = __webpack_require__(251);
+	var ErrorModal = __webpack_require__(277);
 
 	var Weather = React.createClass({
 	    displayName: 'Weather',
@@ -26590,7 +26591,8 @@
 	    handleSearch: function handleSearch(location) {
 	        var this_ = this;
 	        this.setState({
-	            isLoading: true
+	            isLoading: true,
+	            errorMessage: undefined
 	        });
 	        OpenWeatherMap.getTemp(location).then(function (temp) {
 	            this_.setState({
@@ -26598,18 +26600,19 @@
 	                temp: temp,
 	                isLoading: false
 	            });
-	        }, function (errorMessage) {
+	        }, function (e) {
 	            this_.setState({
-	                isLoading: false
+	                isLoading: false,
+	                errorMessage: e.message
 	            });
-	            alert(errorMessage);
 	        });
 	    },
 	    render: function render() {
 	        var _state = this.state,
 	            isLoading = _state.isLoading,
 	            temp = _state.temp,
-	            location = _state.location;
+	            location = _state.location,
+	            errorMessage = _state.errorMessage;
 
 
 	        function renderMessage() {
@@ -26624,6 +26627,12 @@
 	            }
 	        }
 
+	        function renderError() {
+	            if (typeof errorMessage === 'string') {
+	                return React.createElement(ErrorModal, { message: errorMessage });
+	            }
+	        }
+
 	        return React.createElement(
 	            'div',
 	            null,
@@ -26633,7 +26642,8 @@
 	                'Get Weather'
 	            ),
 	            React.createElement(WeatherForm, { onSearch: this.handleSearch }),
-	            renderMessage()
+	            renderMessage(),
+	            renderError()
 	        );
 	    }
 	});
@@ -27188,7 +27198,7 @@
 	            }
 	        }, function (res) {
 	            // Error
-	            throw new Error('Not Found.');
+	            throw new Error(res.message);
 	        });
 	    }
 	};
@@ -28681,6 +28691,63 @@
 	  };
 	};
 
+
+/***/ },
+/* 277 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function($) {'use strict';
+
+	var React = __webpack_require__(8);
+	var ErrorModal = React.createClass({
+	    displayName: 'ErrorModal',
+
+	    getDefaultProps: function getDefaultProps() {
+	        return {
+	            title: 'Error'
+	        };
+	    },
+	    propTypes: {
+	        title: React.PropTypes.string,
+	        message: React.PropTypes.string.isRequired
+	    },
+	    componentDidMount: function componentDidMount() {
+	        var modal = new Foundation.Reveal($('#error-modal'));
+	        modal.open();
+	    },
+	    render: function render() {
+	        var _props = this.props,
+	            title = _props.title,
+	            message = _props.message;
+
+	        return React.createElement(
+	            'div',
+	            { id: 'error-modal', className: 'reveal tiny text-center', 'data-reveal': '' },
+	            React.createElement(
+	                'h4',
+	                null,
+	                title
+	            ),
+	            React.createElement(
+	                'p',
+	                null,
+	                message
+	            ),
+	            React.createElement(
+	                'p',
+	                null,
+	                React.createElement(
+	                    'button',
+	                    { className: 'button hollow', 'data-close': '' },
+	                    'Okay!'
+	                )
+	            )
+	        );
+	    }
+	});
+
+	module.exports = ErrorModal;
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
 
 /***/ }
 /******/ ]);
