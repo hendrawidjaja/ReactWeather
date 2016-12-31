@@ -28244,23 +28244,50 @@
 /* 271 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	"use strict";
 
 	var React = __webpack_require__(8);
 
 	var About = function About(props) {
 	    return React.createElement(
-	        'div',
+	        "div",
 	        null,
 	        React.createElement(
-	            'h3',
-	            null,
-	            'About'
+	            "h1",
+	            { className: "text-center" },
+	            "About"
 	        ),
 	        React.createElement(
-	            'p',
+	            "p",
 	            null,
-	            'Welcome to About page!'
+	            "Small react project. I have built this for developer course."
+	        ),
+	        React.createElement(
+	            "p",
+	            null,
+	            "Here are some of the tools you need to have a loook:"
+	        ),
+	        React.createElement(
+	            "ul",
+	            null,
+	            React.createElement(
+	                "li",
+	                null,
+	                React.createElement(
+	                    "a",
+	                    { href: "htpps://www.facebook.github.io/react" },
+	                    "The React Framework"
+	                )
+	            ),
+	            React.createElement(
+	                "li",
+	                null,
+	                React.createElement(
+	                    "a",
+	                    { href: "htpps://www.openweathermap.org" },
+	                    "Open Weather Map"
+	                )
+	            )
 	        )
 	    );
 	};
