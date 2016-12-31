@@ -26497,7 +26497,14 @@
 	    displayName: 'Nav',
 
 	    onSearch: function onSearch(e) {
-	        e.preventDefault();
+	        var location = this.refs.searchbar.value; // retrieve value from refs in search on navbar
+	        var encodedLocation = encodeURIComponent(location); // prevent %20 from address location
+	        e.preventDefault(); // prevent browser default action of refresh
+
+	        if (location.length > 0) {
+	            this.refs.searchbar.value = ''; // cleanup the refs value
+	            window.location.hash = '#/?location=' + encodedLocation; // put the searched location to addressbar
+	        }
 	    },
 	    render: function render() {
 	        return React.createElement(
@@ -26555,7 +26562,7 @@
 	                        React.createElement(
 	                            'li',
 	                            null,
-	                            React.createElement('input', { type: 'search', placeholder: 'Search Weather by city' })
+	                            React.createElement('input', { type: 'search', placeholder: 'Search Weather by city', ref: 'searchbar' })
 	                        ),
 	                        React.createElement(
 	                            'li',
@@ -26594,8 +26601,11 @@
 	    handleSearch: function handleSearch(location) {
 	        var this_ = this;
 	        this.setState({
+	            // reset all value
 	            isLoading: true,
-	            errorMessage: undefined
+	            errorMessage: undefined,
+	            location: undefined,
+	            temp: undefined
 	        });
 	        OpenWeatherMap.getTemp(location).then(function (temp) {
 	            this_.setState({
@@ -26609,6 +26619,25 @@
 	                errorMessage: e.message
 	            });
 	        });
+	    },
+	    componentDidMount: function componentDidMount() {
+	        var location = this.props.location.query.location;
+	        if (location && location.length > 0) {
+	            this.handleSearch(location);
+
+	            // remove the hash on addressbar
+	            window.location.hash = '';
+	        }
+	    },
+	    // this will detect any changes on props
+	    componentWillReceiveProps: function componentWillReceiveProps(newProps) {
+	        var location = newProps.location.query.location;
+	        if (location && location.length > 0) {
+	            this.handleSearch(location);
+
+	            // remove the hash on addressbar
+	            window.location.hash = '';
+	        }
 	    },
 	    render: function render() {
 	        var _state = this.state,
